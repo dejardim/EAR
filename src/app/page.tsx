@@ -13,11 +13,11 @@ import { ChevronUp, ChevronDown, MessageCircle } from "lucide-react"
 
 export default function Page() {
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hello! How can I help you with your studies today?" }
+    { role: "assistant", content: "Hello! How can I help you today?" }
   ])
   const [inputMessage, setInputMessage] = useState("")
   const [selectedAnswers, setSelectedAnswers] = useState({})
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const questions = [
     {
@@ -122,18 +122,27 @@ export default function Page() {
     }
   ]
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (inputMessage.trim()) {
       setMessages([...messages, { role: "user", content: inputMessage }])
       setInputMessage("")
-      // Simulate assistant response
-      setTimeout(() => {
-        setMessages(prev => [...prev, { 
-          role: "assistant", 
-          content: "I'm an AI assistant. I can try to help you with that question, but remember to verify any information with your textbooks or teachers." 
-        }])
-      }, 1000)
+
+      const newMessages = [...messages, { role: "user", content: inputMessage }]
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages: newMessages }),
+      })
+
+      const data = await response.json()
+      setMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: data.content,
+      }])
+
     }
   }
 
@@ -195,7 +204,7 @@ export default function Page() {
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div className="p-4 flex flex-col h-64">
+        <div className="p-4 flex flex-col h-96">
           <ScrollArea className="flex-grow mb-4">
             <div className="space-y-4">
               {messages.map((message, index) => (
