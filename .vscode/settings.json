@@ -1,0 +1,5 @@
+{
+  "files.associations": {
+    "*.css": "tailwindcss"
+  } // https://stackoverflow.com/questions/76776910/unknown-at-rule-tailwind-cssunknownatrules-tailwind-error
+}
