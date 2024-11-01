@@ -16,7 +16,7 @@ export default function Page() {
     { role: "assistant", content: "Hello! How can I help you today?" }
   ])
   const [inputMessage, setInputMessage] = useState("")
-  const [selectedAnswers, setSelectedAnswers] = useState({})
+  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({})
   const [isOpen, setIsOpen] = useState(false)
 
   const questions = [
@@ -164,7 +164,6 @@ export default function Page() {
             <li key={index} className="text-lg">
               <p className="font-semibold mb-2">{q.question}</p>
 
-              {/* Para meu *eu* do futuro: resolver os erros de tipagem */}
               <RadioGroup
                 onValueChange={(value) => handleAnswerSelect(index, value)}
                 value={selectedAnswers[index] || ""}
